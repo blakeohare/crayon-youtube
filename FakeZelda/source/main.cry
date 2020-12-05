@@ -1,0 +1,78 @@
+﻿import Game;
+import Graphics2D;
+import Math;
+
+// The window is 1000 pixels wide, with a 16:9 aspect ratio.
+const GAME_WIDTH = 1000;
+const GAME_HEIGHT = GAME_WIDTH * 9 / 16;
+const COL_COUNT = 16;
+const ROW_COUNT = 14;
+const TILE_SIZE = 32;
+
+function main(args) {
+
+	grid = newArray2D(COL_COUNT, ROW_COUNT, false);
+
+	for (y = 1; y < ROW_COUNT - 1; y++) {
+		for (x = 1; x < COL_COUNT - 1; x++) {
+			grid[x][y] = true;
+		}
+	}
+
+	player = [1.5, 1.5];
+
+	new GameWindow()
+		.setTitle("FakeZelda")
+		.setGameSize(GAME_WIDTH, GAME_HEIGHT)
+		.setBackgroundColor(Color.SKY_BLUE)
+		.setUpdater(inputState => {
+
+			velocity = 4.0 / 60;
+			newX = player[0];
+			newY = player[1];
+			if (inputState.isKeyPressed(KeyboardKey.LEFT)) {
+				newX -= velocity;
+			} else if (inputState.isKeyPressed(KeyboardKey.RIGHT)) {
+				newX += velocity;
+			}
+			if (inputState.isKeyPressed(KeyboardKey.UP)) {
+				newY -= velocity;
+			} else if (inputState.isKeyPressed(KeyboardKey.DOWN)) {
+				newY += velocity;
+			}
+
+			if (newX >= 0 && newX < COL_COUNT &&
+				newY >= 0 && newY < ROW_COUNT &&
+				grid[Math.floor(newX)][Math.floor(newY)]) {
+				
+				player = [newX, newY];
+			}
+		})
+		.setRenderer(g2d => {
+			// Draw the state of your game to the screen in this function.
+
+			for (y = 0; y < ROW_COUNT; ++y) {
+				for (x = 0; x < COL_COUNT; ++x) {
+					walkable = grid[x][y];
+					if (walkable) {
+						color = Color.GREEN;
+					} else {
+						color = Color.BROWN;
+					}
+
+					g2d.rectangle(
+						x * TILE_SIZE, y * TILE_SIZE,
+						TILE_SIZE, TILE_SIZE, 
+						color);
+				}
+			}
+
+			g2d.rectangle(
+				Math.floor(player[0] * TILE_SIZE) - 10, 
+				Math.floor(player[1] * TILE_SIZE) - 10, 
+				20, 
+				20, 
+				Color.RED);
+		})
+		.show();
+}
