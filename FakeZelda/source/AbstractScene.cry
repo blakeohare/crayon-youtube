@@ -1,0 +1,20 @@
+class AbstractScene {
+    
+    field nextScene = null;
+    
+    constructor() {
+
+    }
+
+    function switchScene(nextScene) {
+        this.nextScene = nextScene;
+    }
+
+    function update(inputState) {
+        throw new Exception();
+    }
+
+    function render(g2d) {
+        throw new Exception();
+    }
+}

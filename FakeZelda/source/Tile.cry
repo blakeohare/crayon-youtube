@@ -1,0 +1,34 @@
+import Images;
+
+class Tile {
+    
+    field id;
+    field x;
+    field y;
+    field isPassable;
+    field image;
+
+    static field imagesById = {
+        'x': Bitmap.fromResource('images/tiles/rock.png'),
+        '.': Bitmap.fromResource('images/tiles/grass.png'),
+    };
+
+    static field passableById = {
+        '.': true,
+    };
+    
+    constructor(id, x, y) {
+        this.id = id;
+        this.x = x;
+        this.y = y;
+
+        this.isPassable = Tile.passableById.get(id, false);
+        this.image = Tile.imagesById[id];
+    }
+
+    function render(g2d) {
+        x = TILE_SIZE * this.x;
+        y = TILE_SIZE * this.y;
+        g2d.drawImage(this.image, x, y);
+    }
+}

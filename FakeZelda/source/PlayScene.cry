@@ -1,0 +1,80 @@
+import Game;
+import Graphics2D;
+import Math;
+import Resources;
+
+const TILE_SIZE = 32;
+
+class PlayScene : AbstractScene {
+
+    field grid;
+    field player;
+    field cols;
+    field rows;
+
+    constructor() : base() {
+        
+        rows = Resources.readText('maps/start.txt')
+            .trim()
+            .split('\n')
+            .map(row => row.trim());
+
+        this.rows = rows.length;
+        this.cols = rows[0].length;
+
+        this.grid = newArray2D(this.cols, this.rows, false);
+
+        for (y = 0; y < this.rows; y++) {
+            for (x = 0; x < this.cols; x++) {
+                tileId = rows[y][x];
+                this.grid[x][y] = new Tile(tileId, x, y);
+            }
+        }
+
+        this.player = [1.5, 1.5];
+    }
+
+    function update(inputState) {
+
+        velocity = 4.0 / 60;
+        newX = this.player[0];
+        newY = this.player[1];
+        if (inputState.isKeyPressed(KeyboardKey.LEFT)) {
+            newX -= velocity;
+        } else if (inputState.isKeyPressed(KeyboardKey.RIGHT)) {
+            newX += velocity;
+        }
+        if (inputState.isKeyPressed(KeyboardKey.UP)) {
+            newY -= velocity;
+        } else if (inputState.isKeyPressed(KeyboardKey.DOWN)) {
+            newY += velocity;
+        }
+
+        if (newX >= 0 && newX < this.cols &&
+            newY >= 0 && newY < this.rows) {
+
+            tile = this.grid[Math.floor(newX)][Math.floor(newY)];
+
+            if (tile.isPassable) {
+                this.player = [newX, newY];
+            }
+        }
+    }
+
+    function render(g2d) {
+
+        for (y = 0; y < this.rows; ++y) {
+            for (x = 0; x < this.cols; ++x) {
+                tile = this.grid[x][y];
+                tile.render(g2d);
+            }
+        }
+
+        g2d.rectangle(
+            Math.floor(this.player[0] * TILE_SIZE) - 10, 
+            Math.floor(this.player[1] * TILE_SIZE) - 10, 
+            20, 
+            20, 
+            Color.RED);
+    }
+}

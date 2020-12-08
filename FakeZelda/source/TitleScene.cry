@@ -1,0 +1,21 @@
+import Game;
+import Images;
+
+class TitleScene : AbstractScene {
+    
+    field backgroundImage = Bitmap.fromResource('images/title.png');
+    
+    constructor() : base() {
+        
+    }
+
+    function update(inputState) {
+        if (inputState.isKeyPressed(KeyboardKey.SPACE)) {
+            this.switchScene(new PlayScene());
+        }
+    }
+
+    function render(g2d) {
+        g2d.drawImage(this.backgroundImage, 0, 0);
+    }
+}
